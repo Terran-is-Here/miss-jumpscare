@@ -20,14 +20,17 @@ Root_Window = tk.Tk()
 max_width = 350
 max_height = 350
 
+# Value below must be a positive integer. 
+max_popups = 10
+
 # Pixel position of the pixel that only changes state whenever you want a popup to appear. 
 # Take this from pixel_coordinates.py or any other tool you use
 miss_X = 0
 miss_Y = 0
-# Value below must be a positive integer. 
-max_popups = 10
 
-
+## Miss Pixel Bounding box logic
+miss_detection_bounding_box = (miss_X, miss_Y, miss_X+1, miss_Y+1)
+miss_detection_pixel = ImageGrab.grab(bbox=miss_detection_bounding_box).getpixel((0,0))
 
 
 ### Helper Function for filepath verification
