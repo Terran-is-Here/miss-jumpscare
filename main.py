@@ -1,9 +1,33 @@
 import tkinter as tk
-import PIL as PILLOW
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageGrab
 import configparser
 import os 
 import random
+
+### Initial Global Variables
+
+screen_X = 0
+screen_Y = 0
+
+
+PopupWindowContainer = []
+Distance_Setting = 1.2
+
+### Root Window Definitions 
+Root_Window = tk.Tk()
+
+### Configurable Settings
+max_width = 350
+max_height = 350
+
+# Pixel position of the pixel that only changes state whenever you want a popup to appear. 
+# Take this from pixel_coordinates.py or any other tool you use
+miss_X = 0
+miss_Y = 0
+# Value below must be a positive integer. 
+max_popups = 10
+
+
 
 
 ### Helper Function for filepath verification
@@ -20,21 +44,7 @@ def File_Address_Verification(filename):
 def intify(float_number): 
     return int(round(float_number,0))
 
-### Initial Global Variables
-
-screen_X = 0
-screen_Y = 0
-PopupWindowContainer = []
-Distance_Setting = 1.2
-
-### Root Window Definitions 
-Root_Window = tk.Tk()
-
-### Configurable Settings
-max_width = 500
-max_height = 400
-
-### Helper Function that returns scaled dimensions based on the aspect ratios 
+###  Function that returns scaled dimensions based on the aspect ratios 
 ### Assumes that image_dimensions is a tuple directly passed from a method like PIL.Image.size; where (x,y)
 def scale_image(image_dimensions): 
     global max_width, max_height
@@ -102,7 +112,7 @@ class popup_window:
         self.image_container.grid(row=0,column=0)
 
         # Keep Following Lines below commented in terms of debugging
-      #  self.window.overrideredirect(True)
+        self.window.overrideredirect(True)
 
 def DestroyAllPopups():
     global PopupWindowContainer
@@ -114,14 +124,22 @@ def DestroyAllPopups():
 def CreatePopupWindow(image_path):
     global PopupWindowContainer
     PopupWindowContainer.append(popup_window(image_path))
+
+#
+def UpdatePopups(image_path): 
+    global PopupWindowContainer, max_popups
+    if len(PopupWindowContainer) > max_popups: 
+        PopupWindowContainer[0].window.destroy()
+        PopupWindowContainer.pop(0)
+    CreatePopupWindow(image_path)
 ## Root Window Settings
 Root_Window.title("vivid/jumpscare control panel")
 Root_Window.geometry("400x40")
 reseteverythingbutton = tk.Button(Root_Window, text="remove ALL popups",command=DestroyAllPopups)
-addpopupbutton = tk.Button(Root_Window, text="Add a Popup", command=lambda:CreatePopupWindow("images\\F8rfSi1a8AATbWc.jpg"))
+updatepopupsbutton = tk.Button(Root_Window, text="UpdatePopups", command=lambda:UpdatePopups("images\\Saturday-shop.png"))
 
 reseteverythingbutton.grid(row=0, column=0)
-addpopupbutton.grid(row=0, column=1)
+updatepopupsbutton.grid(row=0,column=2)
 
 #Start Mainloop
 Root_Window.mainloop()
